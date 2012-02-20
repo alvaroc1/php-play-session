@@ -1,0 +1,33 @@
+Motivation
+==========
+
+Make it possible to migrate a PHP site to the play framework in pieces.
+It is not pretty, but it works. Use at your own risk.
+
+If there is a better way, let me know :)
+
+Setup
+=====
+
+Configure the webserver to proxy the sections that will be handled by the play framework
+to the port in which the play site is running on (probably 9000).
+
+Configure PHP to buffer all output:
+  php.ini:
+  output_buffering = On
+
+Include play-session.php in all the php site pages (some sort of include, of course) and
+configure:
+  <?php
+  ...
+  usePlaySessionHandler(
+    'PLAY',                  // cookie name, must match the cookie name set on the play! app
+    'secret-key-replace-me', // secret key, must match the key from the play! app
+  );
+
+You must manually close the session using session_write_close() on ALL php pages.
+It shouldn't be too hard if you are using a framework.
+
+Make sure that any page that sets a session value, redirects, and dies, manually closes the 
+session before dying.
+
